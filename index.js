@@ -4,15 +4,23 @@ const c = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+//dimension de la brique
 let width = 200;
 let height = 30;
 
 
+let radius = 7;
 let velocity = {
     x: 0,
     y: 0
 }
 
+let velocityBall = {
+    x: 0,
+    y: 0
+}
+
+//position de la brique
 let position = {
     player: {
         x: canvas.width / 2 - width / 2,
@@ -32,12 +40,8 @@ const keys = {
     }
 }
 
-
-
-
-
+//creation de la brique
 function rect() {
-
     c.fillStyle = 'blue';
     c.fillRect(position.player.x, position.player.y, width, height);
 }
@@ -47,12 +51,65 @@ function update() {
     position.player.x += velocity.x;
 }
 
+let positionBall = {
+    ball: {
+        x: position.player.x + width / 2,
+        y: position.player.y - 8
+    }
+}
+//creation de la ball
+function rectBall() {
+    c.beginPath();
+    c.arc(positionBall.ball.x, positionBall.ball.y, 7, 0, Math.PI * 2);
+    c.fillStyle = 'red';
+    c.fill();
+    c.closePath();
+}
+
+function updateBall() {
+    rectBall();
+    positionBall.ball.y += velocityBall.y;
+    positionBall.ball.x += velocityBall.x;
+    
+}
+
+// class Ball {
+
+//     constructor({
+//         position,
+//         velocity
+//     }) {
+//         this.position = position;
+//         this.velocity = velocity;
+
+//         this.radius = 3;
+//     }
+
+//     draw() {
+//         c.beginPath();
+//         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+//         c.fillStyle = 'red';
+//         c.fill();
+//         c.closePath();
+//     }
+
+//     update() {
+//         this.draw();
+//         this.position.x += this.velocity.x
+//         this.position.y += this.velocity.y
+//     }
+// }
+
 function animate() {
 
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height)
     update();
+    updateBall();
+    if ((positionBall.ball.x + radius >= innerWidth) || (positionBall.ball.y + radius >= innerHeight)){
+        console.log('perdu');
+    }
 
     if (keys.q.pressed && position.player.x >= 0) {
         velocity.x = -7;
@@ -65,6 +122,7 @@ function animate() {
 
 animate();
 
+//bouge la brique quand on appuie
 addEventListener('keydown', ({
     key
 }) => {
@@ -77,15 +135,19 @@ addEventListener('keydown', ({
             console.log('right');
             keys.d.pressed = true;
             break;
-        // case 'ArrowLeft':
-        //     console.log('ArrowLeft');
-        //     break;
-        // case 'ArrowRight':
-        //     console.log('ArrowRight');
-        //     break;
+        case ' ':
+            console.log('space');
+            velocityBall.y += -2;
+            // velocityBall.x += 3;
+            keys.space.pressed = true;
+            break;
+            // case 'ArrowRight':
+            //     console.log('ArrowRight');
+            //     break;
     }
 })
 
+//stop la brique au relachement du la touche
 addEventListener('keyup', ({
     key
 }) => {
@@ -98,11 +160,12 @@ addEventListener('keyup', ({
             console.log('right');
             keys.d.pressed = false;
             break;
-        // case 'ArrowLeft':
-        //     console.log('ArrowLeft');
-        //     break;
-        // case 'ArrowRight':
-        //     console.log('ArrowRight');
-        //     break;
+        case ' ':
+            console.log('space');
+            keys.space.pressed = false;
+            break;
+            // case 'ArrowRight':
+            //     console.log('ArrowRight');
+            //     break;
     }
 })
