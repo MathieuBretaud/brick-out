@@ -17,8 +17,6 @@ class Player {
         this.width = 200;
         this.height = 30;
 
-        this.radius = 7;
-
         //position de la brique
         this.position = {
             x: canvas.width / 2 - this.width / 2,
@@ -38,31 +36,54 @@ class Player {
 
 }
 
+class Ball {
 
-//dimension de la brique
-// let width = 200;
-// let height = 30;
+    constructor() {
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        this.radius = 7;
+
+        this.position = {
+            x: player.position.x + 200 / 2,
+            y: player.position.y - 8
+        }
+    }
+
+    draw() {
+        c.beginPath();
+        c.arc(ball.position.x, ball.position.y, this.radius, 0, Math.PI * 2);
+        c.fillStyle = 'red';
+        c.fill();
+        c.closePath();
+    }
+
+    update() {
+        this.draw();
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
 
 
-// let radius = 7;
-// let velocity = {
-//     x: 0,
-//     y: 0
-// }
-
-let velocityBall = {
-    x: 0,
-    y: 0
+        if (this.position.x + this.radius >= canvas.width || this.position.x <= 0) {
+            this.velocity.x = -this.velocity.x;
+            console.log('testtttttt');
+        }else if (this.position.y + this.radius <= 0) {
+            console.log('perdu y');
+            this.velocity.y = +2;
+        }else if (ball.position.x === player.position.x || ball.position.y === player.position.y) {
+            console.log("test");
+            ball.velocity.y += -2;
+        } else {
+            console.log('stop');
+        }
+    }
 }
 
-//position de la brique
-// let position = {
-//     player: {
-//         x: canvas.width / 2 - width / 2,
-//         y: canvas.height - height - 20
-//     }
-// }
+
 const player = new Player();
+const ball = new Ball();
 
 const keys = {
     q: {
@@ -75,17 +96,6 @@ const keys = {
         pressed: false
     }
 }
-
-//creation de la brique
-// function rect() {
-//     c.fillStyle = 'blue';
-//     c.fillRect(position.player.x, position.player.y, width, height);
-// }
-
-// function update() {
-//     rect();
-//     position.player.x += velocity.x;
-// }
 
 // let positionBall = {
 //     ball: {
@@ -102,62 +112,25 @@ const keys = {
 //     c.closePath();
 // }
 
-// function updateBall() {
-//     rectBall();
-//     positionBall.ball.y += velocityBall.y;
-//     positionBall.ball.x += velocityBall.x;
-
-// }
-
-// class Ball {
-
-//     constructor({
-//         position,
-//         velocity
-//     }) {
-//         this.position = position;
-//         this.velocity = velocity;
-
-//         this.radius = 3;
-//     }
-
-//     draw() {
-//         c.beginPath();
-//         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-//         c.fillStyle = 'red';
-//         c.fill();
-//         c.closePath();
-//     }
-
-//     update() {
-//         this.draw();
-//         this.position.x += this.velocity.x
-//         this.position.y += this.velocity.y
-//     }
-// }
-
 function animate() {
 
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.update();
-    // updateBall();
+    ball.update();
 
-    // if (positionBall.ball.y + radius <= 0) {
+    // if (ball.position.y + ball.radius <= 0) {
     //     console.log('perdu y');
-    //     velocityBall.y += +2;
+    //     ball.velocity.y += +2;
     // }
 
-    // if (positionBall.ball.x === position.player.x || positionBall.ball.y === position.player.y) {
+    // if (ball.position.x === player.position.x || ball.position.y === player.position.y) {
     //     console.log("test");
-    //     velocityBall.y += -2;
+    //     ball.velocity.y += -2;
     // }
 
-    // if (positionBall.ball.x + radius >= innerWidth) {
-    //     console.log('perdu width');
-    // }
-
+    
     if (keys.q.pressed && player.position.x >= 0) {
         player.velocity.x = -7;
     } else if (keys.d.pressed && player.position.x + 200 <= canvas.width) {
@@ -184,8 +157,8 @@ addEventListener('keydown', ({
             break;
         case ' ':
             console.log('space');
-            velocityBall.y += -2;
-            // velocityBall.x += 3;
+            ball.velocity.y += -2;
+            ball.velocity.x += 3;
             keys.space.pressed = true;
             break;
             // case 'ArrowRight':
