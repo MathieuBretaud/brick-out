@@ -93,36 +93,38 @@ class Brick {
         position
     }) {
 
-        // this.velocity = {
-        //     x: 0,
-        //     y: 0
-        // }
-        this.width = 200;
-        this.height = 30;
-
-        this.position = {
-            x: position.x,
-            y: position.y
+        const image = new Image();
+        image.src = './img/brick.png';
+        image.onload = () => {
+            const scale = 1;
+            this.image = image;
+            this.width = 100 * scale;
+            this.height = 30 * scale;
+            this.position = {
+                x: position.x,
+                y: position.y
+            }
         }
-
-
-
     }
 
     draw() {
-        c.fillStyle = 'orange';
-        c.strokeStyle = "red";
-
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-
-    update() {
-        this.draw();
-        this.position.x,
+        c.drawImage(
+            this.image,
+            this.position.x,
             this.position.y,
             this.width,
             this.height
-        // this.position.x += this.velocity.x;
+        );
+    }
+
+    update() {
+        if (this.image) {
+            this.draw();
+            this.position.x,
+            this.position.y,
+            this.width,
+            this.height
+        }
     }
 }
 
@@ -135,20 +137,21 @@ class Grid {
 
         this.bricks = [];
 
-        // const colums = Math.floor(Math.random() * 2 + 2);
-        // const rows = Math.floor(Math.random() * 5 + 2);
+        const colums = Math.floor(Math.random() * 10 + 2);
+        const rows = Math.floor(Math.random() * 3 + 2 );
         // console.log(rows);
         // this.width = colums * 30;
 
 
         for (let i = 0; i < 10; i++) {
-
+            for (let y = 0; y < rows; y++) {
             this.bricks.push(new Brick({
                 position: {
-                    x: i * 30,
-                    y: 0
+                    x: i * 100 ,
+                    y: y * 30
                 }
             }))
+        }
         }
         console.log(this.bricks);
 
@@ -251,9 +254,6 @@ addEventListener('keydown', ({
             ball.velocity.x += 3;
             keys.space.pressed = true;
             break;
-            // case 'ArrowRight':
-            //     console.log('ArrowRight');
-            //     break;
     }
 })
 
@@ -274,8 +274,5 @@ addEventListener('keyup', ({
             console.log('space');
             keys.space.pressed = false;
             break;
-            // case 'ArrowRight':
-            //     console.log('ArrowRight');
-            //     break;
     }
 })
