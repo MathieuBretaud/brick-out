@@ -65,25 +65,102 @@ class Ball {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-
+        //ball gauche/droite
         if (this.position.x + this.radius >= canvas.width || this.position.x <= 0) {
             this.velocity.x = -this.velocity.x;
             console.log('testtttttt');
-        }else if (this.position.y + this.radius <= 0) {
-            console.log('perdu y');
-            this.velocity.y = +2;
-        }else if (ball.position.x === player.position.x || ball.position.y === player.position.y) {
-            console.log("test");
-            ball.velocity.y += -2;
-        } else {
-            console.log('stop');
         }
+        //ball haut
+        if (this.position.y + this.radius <= 0) {
+            console.log('perdu y');
+            this.velocity.y = -this.velocity.y;
+        }
+        //ball bas
+        if (this.position.y + this.radius > canvas.height) {
+            console.log('game over');
+            return;
+        }
+        //player
+        if (ball.position.x === player.position.x || ball.position.y === player.position.y) {
+            console.log("test");
+            this.velocity.y += -2;
+        }
+    }
+}
+
+class Brick {
+    constructor({
+        position
+    }) {
+
+        // this.velocity = {
+        //     x: 0,
+        //     y: 0
+        // }
+        this.width = 200;
+        this.height = 30;
+
+        this.position = {
+            x: position.x,
+            y: position.y
+        }
+
+
+
+    }
+
+    draw() {
+        c.fillStyle = 'orange';
+        c.strokeStyle = "red";
+
+        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
+    update() {
+        this.draw();
+        this.position.x,
+            this.position.y,
+            this.width,
+            this.height
+        // this.position.x += this.velocity.x;
+    }
+}
+
+class Grid {
+    constructor() {
+        this.position = {
+            x: 0,
+            y: 0
+        }
+
+        this.bricks = [];
+
+        // const colums = Math.floor(Math.random() * 2 + 2);
+        // const rows = Math.floor(Math.random() * 5 + 2);
+        // console.log(rows);
+        // this.width = colums * 30;
+
+
+        for (let i = 0; i < 10; i++) {
+
+            this.bricks.push(new Brick({
+                position: {
+                    x: i * 30,
+                    y: 0
+                }
+            }))
+        }
+        console.log(this.bricks);
+
+
+
     }
 }
 
 
 const player = new Player();
 const ball = new Ball();
+const grids = [new Grid()];
 
 const keys = {
     q: {
@@ -120,6 +197,19 @@ function animate() {
     player.update();
     ball.update();
 
+
+
+    grids.forEach((grid, index) => {
+        // grid.update();
+
+        grid.bricks.forEach(brick => {
+            // if (brick.position.y <= 0) {
+            //     grid.bricks.splice(index, 1);
+            // }
+            brick.update();
+        })
+    })
+
     // if (ball.position.y + ball.radius <= 0) {
     //     console.log('perdu y');
     //     ball.velocity.y += +2;
@@ -130,7 +220,7 @@ function animate() {
     //     ball.velocity.y += -2;
     // }
 
-    
+
     if (keys.q.pressed && player.position.x >= 0) {
         player.velocity.x = -7;
     } else if (keys.d.pressed && player.position.x + 200 <= canvas.width) {
