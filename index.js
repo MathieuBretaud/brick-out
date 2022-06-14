@@ -66,6 +66,7 @@ class Ball {
 
         this.moving = false;
 
+        this.haut = false;
         // this.position = {
         //     x: player.position.x + 200 / 2,
         //     y: player.position.y - 8
@@ -79,8 +80,8 @@ class Ball {
             this.width = image.width * scale;
             this.height = image.height * scale;
             this.position = {
-                x: player.position.x,
-                y: player.position.y 
+                x: player.position.x + player.width / 2 - 10,
+                y: player.position.y
             }
         }
     }
@@ -105,8 +106,8 @@ class Ball {
         if (this.image) {
             this.draw();
             if (!this.moving) {
-                this.position.x = player.position.x + player.width / 2 - 10 ,
-                this.position.y = player.position.y 
+                this.position.x = player.position.x + player.width / 2 - 10,
+                    this.position.y = player.position.y
             }
             this.position.x += this.velocity.x
             this.position.y += this.velocity.y
@@ -114,28 +115,26 @@ class Ball {
             //ball gauche/droite
             if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
                 this.velocity.x = -this.velocity.x;
-                console.log('testtttttt');
             }
             //ball haut
-            if (this.position.y - this.width <= 0) {
-                console.log('perdu y');
+            if (this.position.y <= 0) {
                 this.velocity.y = -this.velocity.y;
+                this.haut = true;
             }
             //ball bas
-            if (this.position.y + this.height > canvas.height) {
+            if (this.position.y > canvas.height) {
                 console.log('game over');
-                return;
-            }
-            //player
-            if (ball.position.x === player.position.x) {
-                console.log("je suis x");
-                this.velocity.x += -2;
-            } else if (ball.position.y === player.position.y) {
-                console.log('je suis y');
-                this.velocity.y += -2;
             }
 
-            console.log(this.position.x);
+            //player
+            if (this.position.y > canvas.height - player.height - 20) {
+                if ((this.position.x < player.position.x + player.width) && (this.position.x > player.position.x) && (player.position.y < player.position.y + player.height) && (this.position.y > player.position.y)) {
+                    this.velocity.y += -2;
+                }
+            }
+
+
+
         }
     }
 }
@@ -229,21 +228,6 @@ const keys = {
     }
 }
 
-// let positionBall = {
-//     ball: {
-//         x: position.player.x + width / 2,
-//         y: position.player.y - 8
-//     }
-// }
-//creation de la ball
-// function rectBall() {
-//     c.beginPath();
-//     c.arc(positionBall.ball.x, positionBall.ball.y, 7, 0, Math.PI * 2);
-//     c.fillStyle = 'red';
-//     c.fill();
-//     c.closePath();
-// }
-
 function animate() {
 
     requestAnimationFrame(animate);
@@ -293,15 +277,15 @@ addEventListener('keydown', ({
 }) => {
     switch (key) {
         case 'q':
-            console.log('left');
+            // console.log('left');
             keys.q.pressed = true;
             break;
         case 'd':
-            console.log('right');
+            // console.log('right');
             keys.d.pressed = true;
             break;
         case ' ':
-            console.log('space');
+            // console.log('space');
             ball.velocity.y += -2;
             ball.velocity.x += 2;
             keys.space.pressed = true;
@@ -316,15 +300,15 @@ addEventListener('keyup', ({
 }) => {
     switch (key) {
         case 'q':
-            console.log('left');
+            // console.log('left');
             keys.q.pressed = false;
             break;
         case 'd':
-            console.log('right');
+            // console.log('right');
             keys.d.pressed = false;
             break;
         case ' ':
-            console.log('space');
+            // console.log('space');
             keys.space.pressed = false;
             break;
     }
