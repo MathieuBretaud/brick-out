@@ -67,9 +67,6 @@ class Ball {
 
         this.moving = false;
 
-        this.haut = false;
-
-
         const image = new Image();
         image.src = './img/ball.png';
         image.onload = () => {
@@ -90,11 +87,6 @@ class Ball {
         // c.fillStyle = 'red';
         // c.fill();
         // c.closePath();
-        // if (game.over) {
-        //     // c.font = "48px serif";
-        //     c.fillText("GAME OVER", 200, 200);
-        //     console.log('affichage');
-        // }
 
         c.drawImage(
             this.image,
@@ -122,12 +114,10 @@ class Ball {
             //ball haut
             if (this.position.y <= 0) {
                 this.velocity.y = -this.velocity.y;
-                this.haut = true;
             }
             //ball bas
             if (this.position.y > canvas.height) {
                 game.over = true;
-                console.log('game over');
 
                 // setTimeout(() => {
                 //     game.active = false;
@@ -168,27 +158,12 @@ class Ball {
                             }
                         }, 0)
                     };
-
-
                 })
 
                 if (grid.bricks.length == 0) {
                     game.win = true;
-                    console.log('win');
                 }
             })
-
-            // if (game.win) {
-            //     game.active = false;
-            //     c.font = "normal 34pt Arial";
-            //     c.fillText("YOU WON!", 100, 60);
-            // }
-
-
-
-
-
-
         }
     }
 }
@@ -242,12 +217,12 @@ class Grid {
 
         this.bricks = [];
 
-        const colums = Math.floor(Math.random() * 10 + 2);
+        // const colums = Math.floor(Math.random() * 5 + 2);
         const rows = Math.floor(Math.random() * 3 + 2);
 
 
-        for (let i = 0; i < 1; i++) {
-            for (let y = 0; y < 1; y++) {
+        for (let i = 0; i < 10; i++) {
+            for (let y = 0; y < rows; y++) {
                 this.bricks.push(new Brick({
                     position: {
                         x: i * 100,
@@ -256,10 +231,6 @@ class Grid {
                 }))
             }
         }
-        // console.log(this.bricks);
-
-
-
     }
 }
 
@@ -285,7 +256,7 @@ let game = {
 
 function animate() {
     if (!game.active) return
-    
+
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height)
