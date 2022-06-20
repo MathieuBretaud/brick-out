@@ -5,6 +5,7 @@ canvas.width = 1024;
 canvas.height = 576;
 let start = true;
 
+
 class Player {
 
     constructor() {
@@ -89,6 +90,11 @@ class Ball {
         // c.fillStyle = 'red';
         // c.fill();
         // c.closePath();
+        // if (game.over) {
+        //     // c.font = "48px serif";
+        //     c.fillText("GAME OVER", 200, 200);
+        //     console.log('affichage');
+        // }
 
         c.drawImage(
             this.image,
@@ -120,8 +126,15 @@ class Ball {
             }
             //ball bas
             if (this.position.y > canvas.height) {
+                game.over = true;
                 console.log('game over');
+
+                // setTimeout(() => {
+                //     game.active = false;
+                // }, 100)
             }
+
+
 
             //player
             if (this.position.y > canvas.height - player.height - 20) {
@@ -136,7 +149,7 @@ class Ball {
 
                 grid.bricks.forEach((brick, i) => {
                     brick.update();
-                    
+
                     if (brick.position.y < 0) {
                         grid.bricks.splice(index, 1);
                     }
@@ -156,8 +169,24 @@ class Ball {
                         }, 0)
                     };
 
+
                 })
+
+                if (grid.bricks.length == 0) {
+                    game.win = true;
+                    console.log('win');
+                }
             })
+
+            // if (game.win) {
+            //     game.active = false;
+            //     c.font = "normal 34pt Arial";
+            //     c.fillText("YOU WON!", 100, 60);
+            // }
+
+
+
+
 
 
         }
@@ -217,8 +246,8 @@ class Grid {
         const rows = Math.floor(Math.random() * 3 + 2);
 
 
-        for (let i = 0; i < 10; i++) {
-            for (let y = 0; y < rows; y++) {
+        for (let i = 0; i < 1; i++) {
+            for (let y = 0; y < 1; y++) {
                 this.bricks.push(new Brick({
                     position: {
                         x: i * 100,
@@ -227,7 +256,7 @@ class Grid {
                 }))
             }
         }
-        console.log(this.bricks);
+        // console.log(this.bricks);
 
 
 
@@ -248,8 +277,15 @@ const keys = {
     }
 }
 
-function animate() {
+let game = {
+    over: false,
+    win: false,
+    active: true
+};
 
+function animate() {
+    if (!game.active) return
+    
     requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height)
@@ -263,6 +299,21 @@ function animate() {
         player.velocity.x = 8;
     } else {
         player.velocity.x = 0;
+    }
+
+    if (game.win) {
+        c.font = "normal 34pt Arial";
+        c.fillStyle = 'green';
+        c.fillText("YOU WON!", 400, 200);
+        console.log('YOU WON');
+        game.active = false;
+    } else if (game.over) {
+        c.font = "normal 34pt Arial";
+        c.fillStyle = 'red';
+        c.fillText("YOU LOSE!", 400, 200);
+        console.log('YOU LOSE');
+        game.active = false;
+
     }
 }
 
