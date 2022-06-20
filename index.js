@@ -1,9 +1,9 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
+canvas.width = 1024;
+canvas.height = 576;
+let start = true;
 
 class Player {
 
@@ -67,10 +67,7 @@ class Ball {
         this.moving = false;
 
         this.haut = false;
-        // this.position = {
-        //     x: player.position.x + 200 / 2,
-        //     y: player.position.y - 8
-        // }
+
 
         const image = new Image();
         image.src = './img/ball.png';
@@ -129,10 +126,38 @@ class Ball {
             //player
             if (this.position.y > canvas.height - player.height - 20) {
                 if ((this.position.x < player.position.x + player.width) && (this.position.x > player.position.x) && (player.position.y < player.position.y + player.height) && (this.position.y > player.position.y)) {
+
                     this.velocity.y += -2;
                 }
             }
 
+
+            grids.forEach((grid) => {
+
+                grid.bricks.forEach((brick, i) => {
+                    brick.update();
+                    
+                    if (brick.position.y < 0) {
+                        grid.bricks.splice(index, 1);
+                    }
+
+                    //condition AllBricks
+                    if (ball.position.y - ball.height <= brick.position.y + brick.height && ball.position.x - ball.height >= brick.position.x && ball.position.x - ball.width <= brick.position.x + brick.width && ball.position.y + ball.width >= brick.position.y) {
+
+                        this.velocity.y = -this.velocity.y;
+
+
+                        setTimeout(() => {
+                            const brickFound = grid.bricks.find(brick2 => brick2 === brick)
+
+                            if (brickFound) {
+                                grid.bricks.splice(i, 1);
+                            }
+                        }, 0)
+                    };
+
+                })
+            })
 
 
         }
@@ -190,8 +215,6 @@ class Grid {
 
         const colums = Math.floor(Math.random() * 10 + 2);
         const rows = Math.floor(Math.random() * 3 + 2);
-        // console.log(rows);
-        // this.width = colums * 30;
 
 
         for (let i = 0; i < 10; i++) {
@@ -222,9 +245,6 @@ const keys = {
     },
     d: {
         pressed: false
-    },
-    space: {
-        pressed: false
     }
 }
 
@@ -236,34 +256,11 @@ function animate() {
     player.update();
     ball.update();
 
-
-
-    grids.forEach((grid, index) => {
-        // grid.update();
-
-        grid.bricks.forEach(brick => {
-            // if (brick.position.y <= 0) {
-            //     grid.bricks.splice(index, 1);
-            // }
-            brick.update();
-        })
-    })
-
-    // if (ball.position.y + ball.radius <= 0) {
-    //     console.log('perdu y');
-    //     ball.velocity.y += +2;
-    // }
-
-    // if (ball.position.x === player.position.x || ball.position.y === player.position.y) {
-    //     console.log("test");
-    //     ball.velocity.y += -2;
-    // }
-
-
+    //move player
     if (keys.q.pressed && player.position.x >= 0) {
-        player.velocity.x = -7;
+        player.velocity.x = -8;
     } else if (keys.d.pressed && player.position.x + player.width <= canvas.width) {
-        player.velocity.x = 7;
+        player.velocity.x = 8;
     } else {
         player.velocity.x = 0;
     }
@@ -286,11 +283,12 @@ addEventListener('keydown', ({
             break;
         case ' ':
             // console.log('space');
-            ball.velocity.y += -2;
-            ball.velocity.x += 2;
-            keys.space.pressed = true;
-            ball.moving = true;
-            break;
+            if (start) {
+                ball.velocity.y += -4;
+                ball.velocity.x += 5;
+                ball.moving = true;
+            }
+            start = false;
     }
 })
 
@@ -306,10 +304,6 @@ addEventListener('keyup', ({
         case 'd':
             // console.log('right');
             keys.d.pressed = false;
-            break;
-        case ' ':
-            // console.log('space');
-            keys.space.pressed = false;
             break;
     }
 })
