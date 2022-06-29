@@ -1,5 +1,9 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
+const button = document.querySelector('button');
+const startScreen = document.querySelector('.screen');
+
+
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -75,8 +79,8 @@ class Ball {
             this.width = image.width * scale;
             this.height = image.height * scale;
             this.position = {
-                x: player.position.x + player.width / 2 - 10,
-                y: player.position.y
+                x: (canvas.width / 2 - player.width / 2) + (player.width / 2 - 10),
+                y: canvas.height - player.height - 20
             }
         }
     }
@@ -102,7 +106,7 @@ class Ball {
             this.draw();
             if (!this.moving) {
                 this.position.x = player.position.x + player.width / 2 - 10,
-                    this.position.y = player.position.y
+                this.position.y = player.position.y
             }
             this.position.x += this.velocity.x
             this.position.y += this.velocity.y
@@ -129,8 +133,9 @@ class Ball {
             //player
             if (this.position.y > canvas.height - player.height - 20) {
                 if ((this.position.x < player.position.x + player.width) && (this.position.x > player.position.x) && (player.position.y < player.position.y + player.height) && (this.position.y > player.position.y)) {
-
-                    this.velocity.y += -2;
+                    setTimeout(()=>{
+                        this.velocity.y = - this.velocity.y;
+                    },0)
                 }
             }
 
@@ -275,16 +280,18 @@ function animate() {
     if (game.win) {
         c.font = "normal 34pt Arial";
         c.fillStyle = 'green';
-        c.fillText("YOU WON!", 400, 200);
+        c.fillText("GAME WON!", 400, 200);
         console.log('YOU WON');
         game.active = false;
+        startScreen.style = 'block';
+
     } else if (game.over) {
         c.font = "normal 34pt Arial";
         c.fillStyle = 'red';
-        c.fillText("YOU LOSE!", 400, 200);
+        c.fillText("GAME OVER!", 400, 200);
         console.log('YOU LOSE');
         game.active = false;
-
+        startScreen.style = 'block';
     }
 }
 
@@ -329,3 +336,10 @@ addEventListener('keyup', ({
             break;
     }
 })
+
+button.addEventListener('click', event => {
+
+    location.reload();
+    console.log('je suis dans le bouton');
+    // animate();
+});
