@@ -24,9 +24,9 @@ class Player {
 
         //position de la brique
         const image = new Image();
-        image.src = './img/player.png';
+        image.src = './img/paddle.png';
         image.onload = () => {
-            const scale = 0.25;
+            const scale = 1;
             this.image = image;
             this.width = image.width * scale;
             this.height = image.height * scale;
@@ -57,6 +57,7 @@ class Player {
         }
     }
 
+
 }
 
 class Ball {
@@ -80,7 +81,7 @@ class Ball {
             this.height = image.height * scale;
             this.position = {
                 x: (canvas.width / 2 - player.width / 2) + (player.width / 2 - 10),
-                y: canvas.height - player.height - 20
+                y: canvas.height - player.height - 40
             }
         }
     }
@@ -106,7 +107,7 @@ class Ball {
             this.draw();
             if (!this.moving) {
                 this.position.x = player.position.x + player.width / 2 - 10,
-                this.position.y = player.position.y
+                this.position.y = player.position.y - 20
             }
             this.position.x += this.velocity.x
             this.position.y += this.velocity.y
@@ -131,13 +132,13 @@ class Ball {
 
 
             //player
-            if (this.position.y > canvas.height - player.height - 20) {
-                if ((this.position.x < player.position.x + player.width) && (this.position.x > player.position.x) && (player.position.y < player.position.y + player.height) && (this.position.y > player.position.y)) {
+            
+                if ((this.position.x <= player.position.x + player.width) && (this.position.x >= player.position.x) && (player.position.y <= player.position.y + player.height) && (this.position.y >= player.position.y)) {
                     setTimeout(()=>{
                         this.velocity.y = - this.velocity.y;
                     },0)
                 }
-            }
+            
 
 
             grids.forEach((grid) => {
