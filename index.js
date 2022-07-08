@@ -5,7 +5,7 @@ const startScreen = document.querySelector('.screen');
 
 
 
-canvas.width = 1024;
+canvas.width = 1000;
 canvas.height = 576;
 let start = true;
 
